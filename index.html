@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethiopian Date & Global Time</title>
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS Variables */
+        :root {
+            --etfx-primary: #4361ee;
+            --etfx-primary-dark: #3a56d4;
+            --etfx-accent: #f72585;
+            --etfx-bg: #f8f9fa;
+            --etfx-card-bg: #ffffff;
+            --etfx-text: #2b2d42;
+            --etfx-text-light: #8d99ae;
+            --etfx-border: #e0e0e0;
+            --etfx-success: #4cc9f0;
+            --etfx-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            --etfx-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --etfx-gradient-text: linear-gradient(45deg, var(--etfx-primary), var(--etfx-accent));
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--etfx-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--etfx-text);
+            box-sizing: border-box;
+            padding: 1rem; /* Add some padding for smaller screens */
+        }
+
+        /* Container for the date and time display */
+        .date-time-container {
+            background-color: var(--etfx-card-bg);
+            border-radius: 1rem; /* Use rounded corners */
+            box-shadow: var(--etfx-shadow);
+            padding: 2rem;
+            text-align: center;
+            width: 100%;
+            max-width: 500px; /* Increased max width to accommodate global times */
+            border: 1px solid var(--etfx-border);
+            transition: var(--etfx-transition);
+            /* Impressive feature: subtle hover effect */
+            transform: translateY(0);
+        }
+
+        .date-time-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Date display styling */
+        .date-display {
+            font-size: 2.5rem; /* Big font for date */
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            background: var(--etfx-gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        /* Numeric date styling */
+        .numeric-date {
+            font-size: 1.3rem;
+            color: var(--etfx-text-light);
+            margin-top: 0.2rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem; /* Space before time */
+        }
+
+        /* Time display styling */
+        .time-display {
+            font-size: 2.8rem; /* Big font for time */
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background: var(--etfx-gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        /* Separator line */
+        .divider {
+            border: none;
+            border-top: 2px solid var(--etfx-border);
+            margin: 1.5rem 0;
+            width: 80%; /* Shorter divider */
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 9999px; /* Rounded ends for the divider */
+        }
+
+        /* Global times section */
+        .global-times-section {
+            margin-top: 2rem;
+            border-top: 1px solid var(--etfx-border);
+            padding-top: 1.5rem;
+            text-align: left; /* Align text left within this section */
+        }
+
+        .global-times-section h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--etfx-primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .global-times-list {
+            display: grid;
+            grid-template-columns: 1fr; /* Single column by default */
+            gap: 0.75rem;
+        }
+
+        .global-time-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--etfx-bg);
+            border-radius: 0.75rem;
+            border: 1px solid var(--etfx-border);
+            font-size: 1rem;
+            color: var(--etfx-text);
+        }
+
+        .global-time-item .city {
+            font-weight: 500;
+        }
+
+        .global-time-item .time {
+            font-weight: 600;
+            color: var(--etfx-primary-dark);
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 640px) {
+            .global-times-list {
+                grid-template-columns: 1fr 1fr; /* Two columns on larger screens */
+            }
+        }
+
+        @media (max-width: 640px) {
+            .date-time-container {
+                padding: 1.5rem;
+            }
+            .date-display {
+                font-size: 2rem;
+            }
+            .numeric-date {
+                font-size: 1.1rem;
+            }
+            .time-display {
+                font-size: 2.2rem;
+            }
+            .global-times-section h3 {
+                font-size: 1.2rem;
+            }
+            .global-time-item {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="date-time-container">
+        <!-- Date Display -->
+        <div class="date-display">
+            <span id="day-amharic"></span>, <span id="month-amharic"></span> <span id="date"></span> / <span id="year"></span>
+        </div>
+        <div class="numeric-date" id="numeric-date"></div>
+
+        <!-- Time Display -->
+        <div class="time-display">
+            <span id="ethiopian-period"></span> <span id="ethiopian-time"></span>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Global Times Section -->
+        <div class="global-times-section">
+            <h3>Global Times</h3>
+            <div id="global-times-list" class="global-times-list">
+                <!-- Global times will be injected here by JavaScript -->
+                <div class="global-time-item">
+                    <span class="city">New York</span>
+                    <span class="time" id="time-America/New_York">Loading...</span>
+                </div>
+                <div class="global-time-item">
+                    <span class="city">London</span>
+                    <span class="time" id="time-Europe/London">Loading...</span>
+                </div>
+                <div class="global-time-item">
+                    <span class="city">Tokyo</span>
+                    <span class="time" id="time-Asia/Tokyo">Loading...</span>
+                </div>
+                <div class="global-time-item">
+                    <span class="city">Dubai</span>
+                    <span class="time" id="time-Asia/Dubai">Loading...</span>
+                </div>
+            </div>
+            <div id="global-time-error" class="text-sm text-red-500 mt-4 hidden">
+                Failed to load global times.
+            </div>
+        </div>
+
+        <!-- Loading indicator for API calls -->
+        <div id="loading-indicator" class="text-sm text-gray-500 mt-4 hidden">
+            Loading...
+        </div>
+        <!-- Error message display -->
+        <div id="error-message" class="text-sm text-red-500 mt-4 hidden">
+            Failed to load data. Please try again later.
+        </div>
+    </div>
+
+    <script>
+        // Function to show loading indicator
+        function showLoading() {
+            document.getElementById('loading-indicator').classList.remove('hidden');
+            document.getElementById('error-message').classList.add('hidden');
+        }
+
+        // Function to hide loading indicator
+        function hideLoading() {
+            document.getElementById('loading-indicator').classList.add('hidden');
+        }
+
+        // Function to show error message
+        function showError(message = "Failed to load data. Please try again later.") {
+            document.getElementById('error-message').textContent = message;
+            document.getElementById('error-message').classList.remove('hidden');
+        }
+
+        // Function to fetch and display Ethiopian date
+        async function fetchEthiopianDate() {
+            showLoading();
+            try {
+                const response = await fetch('https://api.ethioall.com/date/api');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                document.getElementById('day-amharic').textContent = data.day_amharic;
+                document.getElementById('month-amharic').textContent = data.month_amharic;
+                document.getElementById('date').textContent = data.date;
+                document.getElementById('year').textContent = data.year;
+                document.getElementById('numeric-date').textContent = `(${data.numeric_date})`;
+                hideLoading();
+            } catch (error) {
+                console.error('Error fetching Ethiopian date:', error);
+                showError('Failed to load Ethiopian date.');
+                hideLoading();
+            }
+        }
+
+        // Function to fetch and display Ethiopian time
+        async function fetchEthiopianTime() {
+            try {
+                const response = await fetch('https://api.ethioall.com/time/api');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                const ethiopianTime = data.ethiopian_time;
+                document.getElementById('ethiopian-period').textContent = ethiopianTime.period_amharic;
+                // Format time to ensure two digits for minute and second if they are single digit
+                const formattedHour = ethiopianTime.hour; // Hour is already 1-12 based on API response
+                const formattedMinute = String(ethiopianTime.minute).padStart(2, '0');
+                const formattedSecond = String(ethiopianTime.second).padStart(2, '0');
+                document.getElementById('ethiopian-time').textContent = `${formattedHour}:${formattedMinute}:${formattedSecond}`;
+            } catch (error) {
+                console.error('Error fetching Ethiopian time:', error);
+                // Time updates frequently, so don't show persistent error message for every failed time fetch.
+                // Only show a general error if the initial fetch fails.
+                if (document.getElementById('ethiopian-time').textContent === '') {
+                    showError('Failed to load Ethiopian time.');
+                }
+            }
+        }
+
+        // Function to fetch and display global times
+        async function fetchGlobalTimes() {
+            const timezones = {
+                "America/New_York": "New York",
+                "Europe/London": "London",
+                "Asia/Tokyo": "Tokyo",
+                "Asia/Dubai": "Dubai",
+                "Australia/Sydney": "Sydney", // Added another city
+                "Europe/Paris": "Paris" // Added another city
+            };
+            const globalTimeErrorElement = document.getElementById('global-time-error');
+            globalTimeErrorElement.classList.add('hidden'); // Hide previous errors
+
+            for (const timezone in timezones) {
+                try {
+                    const response = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    const dateTime = new Date(data.datetime);
+                    const formattedTime = dateTime.toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true
+                    });
+                    const elementId = `time-${timezone.replace(/\//g, '_')}`; // Replace / with _ for valid ID
+                    const timeElement = document.getElementById(elementId);
+                    if (timeElement) {
+                        timeElement.textContent = formattedTime;
+                    } else {
+                        // If element doesn't exist, create it dynamically
+                        const globalTimesList = document.getElementById('global-times-list');
+                        const newItem = document.createElement('div');
+                        newItem.className = 'global-time-item';
+                        newItem.innerHTML = `
+                            <span class="city">${timezones[timezone]}</span>
+                            <span class="time" id="${elementId}">${formattedTime}</span>
+                        `;
+                        globalTimesList.appendChild(newItem);
+                    }
+                } catch (error) {
+                    console.error(`Error fetching time for ${timezones[timezone]}:`, error);
+                    const elementId = `time-${timezone.replace(/\//g, '_')}`;
+                    const timeElement = document.getElementById(elementId);
+                    if (timeElement) {
+                        timeElement.textContent = 'N/A'; // Indicate failure
+                    }
+                    globalTimeErrorElement.classList.remove('hidden'); // Show general error for global times
+                }
+            }
+        }
+
+        // Initial fetch on page load
+        window.onload = function() {
+            fetchEthiopianDate();
+            fetchEthiopianTime();
+            fetchGlobalTimes();
+
+            // Update Ethiopian time every second
+            setInterval(fetchEthiopianTime, 1000);
+
+            // Update Ethiopian date every minute (less frequent updates are fine for date)
+            setInterval(fetchEthiopianDate, 60 * 1000);
+
+            // Update global times every 10 seconds
+            setInterval(fetchGlobalTimes, 10 * 1000);
+        };
+    </script>
+</body>
+</html>
