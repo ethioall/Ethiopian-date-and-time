@@ -1,4 +1,4 @@
-# Ethiopian Date & Global Time Display
+# Ethiopian Current Local Date and time Display
 
 This project is a simple, elegant web application that displays the current **Ethiopian date and time**, alongside real-time global times for various major cities. It's designed to be user-friendly, visually appealing, and provides a quick reference for understanding time differences.
 
