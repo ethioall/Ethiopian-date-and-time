@@ -87,8 +87,8 @@ To run this project locally, follow these steps:
 1. **Clone the repository:**
 
    ```bash
-   git clone <your-repository-url>
-   cd ethiopian-date-and-time
+   git clone https://github.com/ethioall/Ethiopian-date-and-time
+   cd Ethiopian-date-and-time
    ```
 
 2. **Open the application:**
